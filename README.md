@@ -18,7 +18,6 @@ An AI-assisted credit-risk platform that evaluates a company's loan risk by comb
 - [API Reference](#api-reference)
 - [Testing](#testing)
 - [Security Notes](#security-notes)
-- [Roadmap](#roadmap)
 
 ---
 
@@ -310,16 +309,6 @@ The test suite covers the risk engine (repayment levels, fraud and legal detecti
 - The n8n exports contain a **placeholder** SerpAPI key. Add real keys inside n8n, not in the JSON files.
 - CORS currently allows all origins (`*`) for local development. Restrict it before deploying.
 - `/export-pdf` renders HTML sent by the client in headless Chromium. Only expose it to trusted clients.
-
----
-
-## Roadmap
-
-- [ ] Move n8n webhook URLs into environment variables
-- [ ] Replace the CSV notes store with PostgreSQL
-- [ ] Add authentication to the API
-- [ ] Dockerise the API and n8n with `docker-compose`
-- [ ] Add CI (pytest and linting) with GitHub Actions
 
 ---
 
