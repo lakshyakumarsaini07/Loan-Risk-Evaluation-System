@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Loan Risk Evaluation</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div class="container">
+    <h1>Loan Risk Evaluation</h1>
+    <div class="divider"></div>
+
+    <!-- Search Section -->
+    <div class="search-section">
+      <div class="search-wrapper">
+        <input id="companyInput" type="text" placeholder="Enter the Company Name" />
+      </div>
+      <button id="evaluateBtn">List Companies</button>
+    </div>
+
+    <nav class="pagination-wrapper hidden" aria-label="Page navigation example">
+      <ul class="pagination" id="companyPagination">
+        <li class="page-item">
+          <a class="page-link" href="#" aria-label="Previous" data-page="prev">
+            <span aria-hidden="true">&laquo;</span>
+          </a>
+        </li>
+        <li class="page-item"><a class="page-link" href="#" data-page="1">1</a></li>
+        <li class="page-item"><a class="page-link" href="#" data-page="2">2</a></li>
+        <li class="page-item"><a class="page-link" href="#" data-page="3">3</a></li>
+        <li class="page-item">
+          <a class="page-link" href="#" aria-label="Next" data-page="next">
+            <span aria-hidden="true">&raquo;</span>
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="company-list" id="companyList"></div>
+
+    <div class="company-actions">
+      <button id="clearBtn" class="secondary-btn">Clear Results</button>
+    </div>
+
+    <!-- Results Section -->
+    <div id="resultsSection" class="results-section">
+    <div id="resultCard" class="result-card"></div>
+
+    <!-- Download Section -->
+    <div class="download-container hidden">
+    <div>
+        <select id="downloadFormat">
+            <option value="pdf">Download as PDF</option>
+            <option value="docx">Download as DOCX</option>
+        </select>
+
+        <button id="downloadBtn">
+            Download
+        </button>
+    </div> 
+
+<!-- Suggestion text Section -->
+
+    <div>
+      <textarea
+          id="suggestion"
+          placeholder="Enter your suggestion/comments"></textarea>
+      <button id="submitBtn">
+      Submit
+      </button>
+
+      <p id="status"></p>
+
+    </div>
+
+    </div>
+
+    </div>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+

@@ -1,0 +1,13 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Secrets & local config
+.env
+.mcp.json
+
+# Editor / tooling
+.vscode/
+.gemini/

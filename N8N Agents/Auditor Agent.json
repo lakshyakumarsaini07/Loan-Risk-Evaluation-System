@@ -1,0 +1,149 @@
+{
+  "name": "Auditor Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "records_audit",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -384,
+        -64
+      ],
+      "id": "ff9b3049-1c54-4423-a59d-1d8cc1a29595",
+      "name": "Webhook",
+      "webhookId": "b5380990-29fd-4837-af87-3d531fa1a1c9"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are an Auditor Agent.\n\nYour job is NOT to create new information.\n\nYou verify the Supervisor output against the source data.\n\nRAW RECORDS\n\n{{ JSON.stringify($json.body.records, null, 2) }}\n\nEXTERNAL RESEARCH\n\n{{ JSON.stringify($json.body.research_data, null, 2) }}\n\nSUPERVISOR OUTPUT\n\n{{ JSON.stringify($json.body.llm_analysis, null, 2) }}\n\nSOURCE PRIORITY\n\n1. Internal records (highest priority)\n2. External research\n3. Supervisor output\n\nTasks:\n\n1. Verify repaymentPct against records.\n2. Verify companySummary against records and research.\n3. Verify fraudHistory.\n4. Verify legalIssues.\n5. Verify marketReputation.\n6. Verify creditworthiness.\n7. Verify riskFactors.\n8. Verify loanRecords.\n\nRules:\n\nYou are a validator, not a writer.\n\nMinimize changes.\n\nPreserve correct values.\n\nOnly correct fields when evidence exists.\n\nUnknown means Unknown.\n\nDo NOT infer:\n\n\"No fraud\"\n\"No legal issues\"\n\nunless supported by records or research.\n\nInternal records override external research.\n\nResearch supplements records.\n\nDo not rewrite companySummary unless factual errors exist.\n\nIf no changes are required:\n\nauditReport.passed = true\n\nauditReport.correctedFields = []\n\nauditReport.issues = []\n\nIf changes are required:\n\nauditReport.passed = false\n\nPopulate:\n\n- correctedFields\n- issues\n- warnings\n\nReturn JSON only.",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        32,
+        -64
+      ],
+      "id": "3cdcd83b-d858-4eb8-88b7-02b6aadb8836",
+      "name": "AI Agent",
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        160
+      ],
+      "id": "93ecf5ee-6e66-41e2-bbe8-9d69ef4016a3",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "81EpUbGfssj6xT8a",
+          "name": "Google Gemini(PaLM) Api account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "allIncomingItems",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        480,
+        -64
+      ],
+      "id": "1b7c1de0-6bfc-48bf-8949-25bee17583f4",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"properties\": {\n\n    \"companySummary\": {\n      \"type\": \"string\"\n    },\n\n    \"repaymentPct\": {\n      \"type\": \"number\"\n    },\n\n    \"fraudHistory\": {\n      \"type\": \"string\"\n    },\n\n    \"legalIssues\": {\n      \"type\": \"string\"\n    },\n\n    \"marketReputation\": {\n      \"type\": \"string\"\n    },\n\n    \"creditworthiness\": {\n      \"type\": \"string\"\n    },\n\n    \"riskFactors\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    },\n\n    \"loanRecords\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\"\n      }\n    },\n\n    \"auditReport\": {\n      \"type\": \"object\",\n      \"properties\": {\n\n        \"passed\": {\n          \"type\": \"boolean\"\n        },\n\n        \"confidence\": {\n          \"type\": \"number\"\n        },\n\n        \"severity\": {\n          \"type\": \"string\"\n        },\n\n        \"issues\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"string\"\n          }\n        },\n\n        \"correctedFields\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"string\"\n          }\n        },\n\n        \"warnings\": {\n          \"type\": \"array\",\n          \"items\": {\n            \"type\": \"string\"\n          }\n        },\n\n        \"sourcePriorityApplied\": {\n          \"type\": \"string\"\n        }\n      }\n    },\n\n    \"validationDetails\": {\n\n      \"type\": \"object\",\n\n      \"properties\": {\n\n        \"repaymentPctVerified\": {\n          \"type\": \"boolean\"\n        },\n\n        \"companySummaryVerified\": {\n          \"type\": \"boolean\"\n        },\n\n        \"fraudHistoryVerified\": {\n          \"type\": \"boolean\"\n        },\n\n        \"legalIssuesVerified\": {\n          \"type\": \"boolean\"\n        },\n\n        \"marketReputationVerified\": {\n          \"type\": \"boolean\"\n        },\n\n        \"creditworthinessVerified\": {\n          \"type\": \"boolean\"\n        },\n\n        \"riskFactorsVerified\": {\n          \"type\": \"boolean\"\n        },\n\n        \"loanRecordsVerified\": {\n          \"type\": \"boolean\"\n        },\n\n        \"hallucinationDetected\": {\n          \"type\": \"boolean\"\n        },\n\n        \"summaryModified\": {\n          \"type\": \"boolean\"\n        },\n\n        \"riskFactorsModified\": {\n          \"type\": \"boolean\"\n        },\n\n        \"loanRecordsModified\": {\n          \"type\": \"boolean\"\n        }\n\n      }\n    },\n\n    \"sourceMetadata\": {\n\n      \"type\": \"object\",\n\n      \"properties\": {\n\n        \"recordCount\": {\n          \"type\": \"number\"\n        },\n\n        \"researchAvailable\": {\n          \"type\": \"boolean\"\n        },\n\n        \"primarySource\": {\n          \"type\": \"string\"\n        }\n\n      }\n\n    }\n\n  },\n\n  \"required\": [\n\n    \"companySummary\",\n    \"repaymentPct\",\n    \"fraudHistory\",\n    \"legalIssues\",\n    \"marketReputation\",\n    \"creditworthiness\",\n    \"riskFactors\",\n    \"loanRecords\",\n    \"auditReport\",\n    \"validationDetails\"\n\n  ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        208,
+        144
+      ],
+      "id": "1d50132b-fed5-4779-9857-99c7094add64",
+      "name": "Structured Output Parser"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "versionId": "df818930-8f3a-4be5-a548-5e93c2583b39",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "53048aaeb480e76eb214548fb9172b22cff8d44a6625e04ea5ec9ac47a5b6d73"
+  },
+  "nodeGroups": [],
+  "id": "BvtT7Sppd189UOPO",
+  "tags": []
+}

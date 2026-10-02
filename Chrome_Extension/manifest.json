@@ -1,0 +1,35 @@
+{
+  "manifest_version": 3,
+  "name": "Loan Risk Evaluation System",
+  "version": "1.0",
+  "description": "A Chrome extension for evaluating loan risk based on company data.",
+
+  "permissions": [
+    "storage",
+    "sidePanel"
+  ],
+
+  "host_permissions": [
+    "http://127.0.0.1:8000/*",
+    "http://localhost:8000/*"
+  ],
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "action": {
+    "default_title": "Open Loan Risk Evaluator"
+  },
+
+  "side_panel": {
+    "default_path": "popup.html"
+  },
+"icons" : {
+   "16": "extension_icon.png",
+   "32": "extension_icon.png",
+   "48": "extension_icon.png",
+   "128": "extension_icon.png"
+ }
+
+}
